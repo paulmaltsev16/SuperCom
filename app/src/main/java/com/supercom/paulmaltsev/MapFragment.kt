@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.supercom.paulmaltsev.databinding.FragmentMapBinding
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment() {
 
     private lateinit var mMap: GoogleMap
     private var _binding: FragmentMapBinding? = null
@@ -29,8 +29,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (childFragmentManager.findFragmentById(R.id.google_map_fragment) as SupportMapFragment)
-            .getMapAsync(this)
+        addListenerToMapView()
+        requestLocationPermission()
+        notifyUserAboutLocationPermissionStatus()
     }
 
     override fun onDestroy() {
@@ -38,10 +39,41 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         _binding = null
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    private fun addListenerToMapView() {
+        (childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment)
+            .getMapAsync { googleMap ->
+                mMap = googleMap
+                val sydney = LatLng(-34.0, 151.0)
+                mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+            }
+    }
+
+    // If the user has restricted location permission several times, he must open the
+    // settings to allow this.
+    private fun requestLocationPermission() {
+        if (!requireContext().isLocationPermissionGranted()) {
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        notifyUserAboutLocationPermissionStatus()
+    }
+
+    private fun notifyUserAboutLocationPermissionStatus() {
+        binding.mapPermissionsDenied.visibility =
+            if (!requireActivity().isLocationPermissionGranted()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
     }
 }
