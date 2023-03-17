@@ -1,5 +1,6 @@
 package com.supercom.paulmaltsev
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,7 @@ class MapFragment : Fragment() {
         addListenerToMapView()
         requestLocationPermission()
         notifyUserAboutLocationPermissionStatus()
+        initListeners()
     }
 
     override fun onDestroy() {
@@ -75,5 +77,29 @@ class MapFragment : Fragment() {
             } else {
                 View.GONE
             }
+    }
+
+    private fun initListeners() {
+        binding.mapLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                startTrackLocation()
+            } else {
+                stopTrackLocation()
+            }
+        }
+    }
+
+    private fun startTrackLocation() {
+        Intent(requireActivity().applicationContext, LocationService::class.java).apply {
+            action = LocationService.ACTION_START
+            requireActivity().startService(this)
+        }
+    }
+
+    private fun stopTrackLocation() {
+        Intent(requireActivity().applicationContext, LocationService::class.java).apply {
+            action = LocationService.ACTION_STOP
+            requireActivity().startService(this)
+        }
     }
 }
