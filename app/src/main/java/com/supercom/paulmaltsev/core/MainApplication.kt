@@ -1,12 +1,12 @@
-package com.supercom.paulmaltsev
+package com.supercom.paulmaltsev.core
 
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import com.supercom.paulmaltsev.LocationService.Companion.NOTIFICATION_CHANNEL_ID
 
-private const val notificationChannelNameLocation = "location_channel_name"
+private const val LOCATION_NOTIFICATION_CHANNEL_NAME = "location_channel_name"
+const val LOCATION_NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID"
 
 class MainApplication : Application() {
 
@@ -17,8 +17,8 @@ class MainApplication : Application() {
 
     private fun createNotificationChannel() {
         val notificationChannel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            notificationChannelNameLocation,
+            LOCATION_NOTIFICATION_CHANNEL_ID,
+            LOCATION_NOTIFICATION_CHANNEL_NAME,
             NotificationManager.IMPORTANCE_LOW
         )
 

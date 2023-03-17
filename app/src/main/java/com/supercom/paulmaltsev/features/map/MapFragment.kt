@@ -1,4 +1,4 @@
-package com.supercom.paulmaltsev
+package com.supercom.paulmaltsev.features.map
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.supercom.paulmaltsev.R
+import com.supercom.paulmaltsev.core.location.LocationService
+import com.supercom.paulmaltsev.core.isLocationPermissionGranted
 import com.supercom.paulmaltsev.databinding.FragmentMapBinding
 
 class MapFragment : Fragment() {

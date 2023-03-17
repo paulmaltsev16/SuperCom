@@ -1,4 +1,4 @@
-package com.supercom.paulmaltsev
+package com.supercom.paulmaltsev.core.location
 
 import android.location.Location
 import kotlinx.coroutines.flow.Flow

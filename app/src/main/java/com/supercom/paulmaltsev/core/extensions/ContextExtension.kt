@@ -1,4 +1,4 @@
-package com.supercom.paulmaltsev
+package com.supercom.paulmaltsev.core
 
 import android.content.Context
 import android.content.pm.PackageManager

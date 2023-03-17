@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.supercom.paulmaltsev.MapFragment"
+        android:name="com.supercom.paulmaltsev.features.map.MapFragment"
         android:label="@string/map"
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/bluetoothFragment"
-        android:name="com.supercom.paulmaltsev.BluetoothFragment"
+        android:name="com.supercom.paulmaltsev.features.bluetoth.BluetoothFragment"
         android:label="@string/bluetooth"
         tools:layout="@layout/fragment_bluetooth" />
     <action
