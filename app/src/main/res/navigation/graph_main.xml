@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_main"
+    app:startDestination="@id/mapFragment">
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.supercom.paulmaltsev.MapFragment"
+        android:label="@string/map"
+        tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/bluetoothFragment"
+        android:name="com.supercom.paulmaltsev.BluetoothFragment"
+        android:label="@string/bluetooth"
+        tools:layout="@layout/fragment_bluetooth" />
+    <action
+        android:id="@+id/action_global_bluetoothFragment"
+        app:destination="@id/bluetoothFragment"
+        app:popUpTo="@id/graph_main"
+        app:popUpToInclusive="false" />
+    <action
+        android:id="@+id/action_global_mapFragment"
+        app:destination="@id/mapFragment"
+        app:popUpTo="@id/graph_main"
+        app:popUpToInclusive="false" />
+</navigation>
