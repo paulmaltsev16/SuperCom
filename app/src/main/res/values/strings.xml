@@ -5,4 +5,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="location_tracking_is_restricted">Location tracking is restricted</string>
     <string name="allow">Allow</string>
+    <string name="tracking_location">Tracking location</string>
+    <string name="track_location">Track location</string>
 </resources>
