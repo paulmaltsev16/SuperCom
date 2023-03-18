@@ -64,6 +64,7 @@ class BluetoothFragment : Fragment() {
         // Add listener to 'Enter'-key of keyboard
         binding.bluetoothFilterResult.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
+                binding.bluetoothFilterResult.clearFocus()
                 hideKeyboard()
                 true
             } else {
