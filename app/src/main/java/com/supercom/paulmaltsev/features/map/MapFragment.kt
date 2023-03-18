@@ -15,10 +15,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.supercom.paulmaltsev.R
 import com.supercom.paulmaltsev.core.extensions.isLocationPermissionGranted
+import com.supercom.paulmaltsev.core.extensions.isServiceRunning
 import com.supercom.paulmaltsev.core.location.LocationService
 import com.supercom.paulmaltsev.databinding.FragmentMapBinding
 import com.supercom.paulmaltsev.features.map.entities.LocationItem
 import com.supercom.paulmaltsev.features.map.view_model.MapViewModel
+
 
 private const val MAP_VIEW_ZOOM_LEVEL = 12f
 private const val TEL_AVIV_LATITUDE = 32.0852999
@@ -50,6 +52,13 @@ class MapFragment : Fragment() {
         observerLocation()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // isServiceRunning() method notifies the user about running location service
+        binding.mapLocationSwitch.isChecked =
+            requireContext().isServiceRunning(LocationService::class.java)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -71,7 +80,7 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun startTrackingLocation(isTrack: Boolean) {
+    private fun startTrackingLocation(isStartTrackLocation: Boolean) {
         if (!requireContext().isLocationPermissionGranted()) {
             locationPermissionLauncher.launch(REQUIRED_PERMISSIONS)
             binding.mapLocationSwitch.isChecked = false
@@ -79,7 +88,11 @@ class MapFragment : Fragment() {
         }
 
         Intent(requireActivity().applicationContext, LocationService::class.java).apply {
-            action = if (isTrack) LocationService.ACTION_START else LocationService.ACTION_STOP
+            action = if (isStartTrackLocation) {
+                LocationService.ACTION_START
+            } else {
+                LocationService.ACTION_STOP
+            }
             requireActivity().startService(this)
         }
     }
@@ -93,7 +106,6 @@ class MapFragment : Fragment() {
 
         if (allPermissionGranted) {
             startTrackingLocation(true)
-            binding.mapLocationSwitch.isChecked = true
             notifyUserAboutLocationPermissionStatus()
         }
     }
