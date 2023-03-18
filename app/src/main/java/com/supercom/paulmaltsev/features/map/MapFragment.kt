@@ -2,7 +2,6 @@ package com.supercom.paulmaltsev.features.map
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +14,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.supercom.paulmaltsev.R
-import com.supercom.paulmaltsev.core.location.LocationService
 import com.supercom.paulmaltsev.core.isLocationPermissionGranted
+import com.supercom.paulmaltsev.core.location.LocationService
 import com.supercom.paulmaltsev.databinding.FragmentMapBinding
+import com.supercom.paulmaltsev.features.map.entities.LocationItem
 import com.supercom.paulmaltsev.features.map.view_model.MapViewModel
+
+const val MAP_VIEW_ZOOM_LEVEL = 20f
 
 class MapFragment : Fragment() {
 
@@ -52,9 +54,6 @@ class MapFragment : Fragment() {
         (childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment)
             .getMapAsync { googleMap ->
                 mMap = googleMap
-                val sydney = LatLng(-34.0, 151.0)
-                mMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-                mMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
             }
     }
 
@@ -118,8 +117,19 @@ class MapFragment : Fragment() {
     }
 
     private fun observerLocation() {
-        viewModel.locationsLiveData.observe(viewLifecycleOwner) {
-            Log.i("tester", "${it?.size}")
+        viewModel.locationsLiveData.observe(viewLifecycleOwner) { locationList ->
+            locationList.forEach {
+                addMarkerToMap(it)
+            }
+        }
+    }
+
+    private fun addMarkerToMap(location: LocationItem) {
+        val markerPosition = LatLng(location.latitude, location.longitude)
+        mMap?.let {
+            it.addMarker(MarkerOptions().position(markerPosition))
+            it.moveCamera(CameraUpdateFactory.newLatLng(markerPosition))
+            it.animateCamera(CameraUpdateFactory.zoomTo(MAP_VIEW_ZOOM_LEVEL))
         }
     }
 }
