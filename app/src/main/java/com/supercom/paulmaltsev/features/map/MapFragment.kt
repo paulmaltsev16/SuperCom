@@ -20,7 +20,9 @@ import com.supercom.paulmaltsev.databinding.FragmentMapBinding
 import com.supercom.paulmaltsev.features.map.entities.LocationItem
 import com.supercom.paulmaltsev.features.map.view_model.MapViewModel
 
-const val MAP_VIEW_ZOOM_LEVEL = 20f
+private const val MAP_VIEW_ZOOM_LEVEL = 12f
+private const val TEL_AVIV_LATITUDE = 32.0852999
+private const val TEL_AVIV_LONGITUDE = 34.7817676
 
 class MapFragment : Fragment() {
 
@@ -54,6 +56,9 @@ class MapFragment : Fragment() {
         (childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment)
             .getMapAsync { googleMap ->
                 mMap = googleMap
+                val telAviv = LatLng(TEL_AVIV_LATITUDE, TEL_AVIV_LONGITUDE)
+                mMap?.moveCamera(CameraUpdateFactory.newLatLng(telAviv))
+                mMap?.animateCamera(CameraUpdateFactory.zoomTo(MAP_VIEW_ZOOM_LEVEL))
             }
     }
 
