@@ -1,9 +1,12 @@
 package com.supercom.paulmaltsev
 
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.supercom.paulmaltsev.core.isNotificationPermissionGranted
 import com.supercom.paulmaltsev.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initBottomNavigationViewListener()
+        requestNotificationPermission()
     }
 
     private fun initBottomNavigationViewListener() {
@@ -27,6 +31,21 @@ class MainActivity : AppCompatActivity() {
                 R.id.menuMain_bluetooth -> navController.navigate(R.id.action_global_bluetoothFragment)
             }
             return@setOnItemSelectedListener true
+        }
+    }
+
+    // On api 33 the app needs permission to send notification
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return
+        }
+
+        if (!isNotificationPermissionGranted()) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                0
+            )
         }
     }
 }

@@ -7,4 +7,5 @@
     <string name="allow">Allow</string>
     <string name="tracking_location">Tracking location</string>
     <string name="track_location">Track location</string>
+    <string name="location_tracking">Location tracking</string>
 </resources>

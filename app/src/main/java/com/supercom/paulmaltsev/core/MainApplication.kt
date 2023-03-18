@@ -4,8 +4,8 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import com.supercom.paulmaltsev.R
 
-private const val LOCATION_NOTIFICATION_CHANNEL_NAME = "location_channel_name"
 const val LOCATION_NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID"
 
 class MainApplication : Application() {
@@ -18,7 +18,7 @@ class MainApplication : Application() {
     private fun createNotificationChannel() {
         val notificationChannel = NotificationChannel(
             LOCATION_NOTIFICATION_CHANNEL_ID,
-            LOCATION_NOTIFICATION_CHANNEL_NAME,
+            getString(R.string.location_tracking),
             NotificationManager.IMPORTANCE_LOW
         )
 
