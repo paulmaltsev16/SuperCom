@@ -8,4 +8,9 @@
     <string name="tracking_location">Tracking location</string>
     <string name="track_location">Track location</string>
     <string name="location_tracking">Location tracking</string>
+    <string name="filter_results_by_mac_address">Filter results by mac address</string>
+    <string name="scan">Scan</string>
+    <string name="scanned_devices">Scanned devices</string>
+    <string name="stop">Stop</string>
+    <string name="done">Done</string>
 </resources>

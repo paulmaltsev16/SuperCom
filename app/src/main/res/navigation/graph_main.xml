@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/bluetoothFragment"
-        android:name="com.supercom.paulmaltsev.features.bluetoth.BluetoothFragment"
+        android:name="com.supercom.paulmaltsev.features.bluetooth.BluetoothFragment"
         android:label="@string/bluetooth"
         tools:layout="@layout/fragment_bluetooth" />
     <action
