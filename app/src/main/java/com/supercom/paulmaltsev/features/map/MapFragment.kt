@@ -2,11 +2,13 @@ package com.supercom.paulmaltsev.features.map
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -16,12 +18,14 @@ import com.supercom.paulmaltsev.R
 import com.supercom.paulmaltsev.core.location.LocationService
 import com.supercom.paulmaltsev.core.isLocationPermissionGranted
 import com.supercom.paulmaltsev.databinding.FragmentMapBinding
+import com.supercom.paulmaltsev.features.map.view_model.MapViewModel
 
 class MapFragment : Fragment() {
 
-    private lateinit var mMap: GoogleMap
+    private var mMap: GoogleMap? = null
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: MapViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +38,9 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addListenerToMapView()
-        requestLocationPermission()
+        initLocationTrackingSwitchListener()
         notifyUserAboutLocationPermissionStatus()
-        initListeners()
+        observerLocation()
     }
 
     override fun onDestroy() {
@@ -49,10 +53,27 @@ class MapFragment : Fragment() {
             .getMapAsync { googleMap ->
                 mMap = googleMap
                 val sydney = LatLng(-34.0, 151.0)
-                mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+                mMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+                mMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
             }
     }
+
+    private fun initLocationTrackingSwitchListener() {
+        binding.mapLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (!requireContext().isLocationPermissionGranted()) {
+                requestLocationPermission()
+                binding.mapLocationSwitch.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+
+            if (isChecked) {
+                startTrackLocation()
+            } else {
+                stopTrackLocation()
+            }
+        }
+    }
+
 
     // If the user has restricted location permission several times, he must open the
     // settings to allow this.
@@ -82,16 +103,6 @@ class MapFragment : Fragment() {
             }
     }
 
-    private fun initListeners() {
-        binding.mapLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                startTrackLocation()
-            } else {
-                stopTrackLocation()
-            }
-        }
-    }
-
     private fun startTrackLocation() {
         Intent(requireActivity().applicationContext, LocationService::class.java).apply {
             action = LocationService.ACTION_START
@@ -103,6 +114,12 @@ class MapFragment : Fragment() {
         Intent(requireActivity().applicationContext, LocationService::class.java).apply {
             action = LocationService.ACTION_STOP
             requireActivity().startService(this)
+        }
+    }
+
+    private fun observerLocation() {
+        viewModel.locationsLiveData.observe(viewLifecycleOwner) {
+            Log.i("tester", "${it?.size}")
         }
     }
 }
