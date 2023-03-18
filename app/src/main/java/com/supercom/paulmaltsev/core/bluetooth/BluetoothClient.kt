@@ -49,7 +49,12 @@ class BluetoothClient(
             return
         }
 
-        context.unregisterReceiver(foundDeviceReceiver)
+        // In case receiver was unregistered
+        try {
+            context.unregisterReceiver(foundDeviceReceiver)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
         bluetoothAdapter?.cancelDiscovery()
     }
 }
