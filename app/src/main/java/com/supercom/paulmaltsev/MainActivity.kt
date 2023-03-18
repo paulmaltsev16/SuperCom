@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.supercom.paulmaltsev.core.isNotificationPermissionGranted
+import com.supercom.paulmaltsev.core.extensions.isNotificationPermissionGranted
 import com.supercom.paulmaltsev.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

@@ -14,7 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.supercom.paulmaltsev.R
-import com.supercom.paulmaltsev.core.isLocationPermissionGranted
+import com.supercom.paulmaltsev.core.extensions.isLocationPermissionGranted
 import com.supercom.paulmaltsev.core.location.LocationService
 import com.supercom.paulmaltsev.databinding.FragmentMapBinding
 import com.supercom.paulmaltsev.features.map.entities.LocationItem
