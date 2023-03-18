@@ -1,10 +1,14 @@
 # SuperCom
 
+<img src="https://static.wixstatic.com/media/78f816_f09ba7a1a389424cbe4931068124e2f7~mv1.gif" alt="SuperCom">
+
+#
+
 ### Stack
 - Kotlin
 - Google Map SDK
 - Bluetooth
-- Background services
+- Background service
 - Navigation component
 - ViewBinding
 - LiveData
@@ -34,20 +38,15 @@ This can be particularly useful for users who are traveling or exploring new are
 keep track of their location or find nearby points of interest.
 
 #
-<div align="center">
-#### Location tracking in action (gif)
- <img src="documentation/location_tracking_in_action.gif" alt="drawing" width="220" height="500"/>
 
-#### Location history
- <img src="documentation/user_location_history.jpg" alt="drawing" width="220" height="500"/>
+ <div align="center">
 
-#### Bluetooth permissions
- <img src="documentation/bluetooth_permission.jpg" alt="drawing" width="220" height="500"/>
+### Location tracking in action ( GIF )   |   Location history
+ <img src="documentation/location_tracking_in_action.gif" alt="drawing" width="240" height="500"/> <img src="documentation/user_location_history.jpg" alt="drawing" width="240" height="500"/>
 
-#### Scanned devices
- <img src="documentation/scanned_devices.jpg" alt="drawing" width="220" height="500"/>
+### Bluetooth permission   |   Scanned devices
+ <img src="documentation/bluetooth_permission.jpg" alt="drawing" width="240" height="500"/>  <img src="documentation/scanned_devices.jpg" alt="drawing" width="240" height="500"/>
+
 </div>
-
-
 
 
