@@ -5,6 +5,7 @@ import android.content.Intent
 import android.location.Location
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.location.LocationServices
 import com.supercom.paulmaltsev.R
 import com.supercom.paulmaltsev.core.LOCATION_NOTIFICATION_CHANNEL_ID
@@ -23,7 +24,7 @@ class LocationService : Service() {
     companion object {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
-        const val FOREGROUND_SERVICE_ID = 1
+        const val NOTIFICATION_FOREGROUND_SERVICE_ID = 1
         const val LOCATION_UPDATES_INTERVALS = 1000L
         const val LOCATION_LIMIT_IN_DB = 20
     }
@@ -65,7 +66,7 @@ class LocationService : Service() {
             }
             .launchIn(serviceScope)
 
-        startForeground(FOREGROUND_SERVICE_ID, notification)
+        startForeground(NOTIFICATION_FOREGROUND_SERVICE_ID, notification)
     }
 
     private fun saveLocationToDatabase(location: Location) {
@@ -84,7 +85,8 @@ class LocationService : Service() {
     }
 
     private fun stopService() {
-        stopForeground(STOP_FOREGROUND_DETACH)
         stopSelf()
+        stopForeground(STOP_FOREGROUND_DETACH)
+        NotificationManagerCompat.from(this).cancel(NOTIFICATION_FOREGROUND_SERVICE_ID)
     }
 }
