@@ -23,6 +23,10 @@ import com.supercom.paulmaltsev.features.map.view_model.MapViewModel
 private const val MAP_VIEW_ZOOM_LEVEL = 12f
 private const val TEL_AVIV_LATITUDE = 32.0852999
 private const val TEL_AVIV_LONGITUDE = 34.7817676
+private val REQUIRED_PERMISSIONS = arrayOf(
+    android.Manifest.permission.ACCESS_FINE_LOCATION,
+    android.Manifest.permission.ACCESS_COARSE_LOCATION
+)
 
 class MapFragment : Fragment() {
 
@@ -41,8 +45,7 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        addListenerToMapView()
-        initLocationTrackingSwitchListener()
+        initListeners()
         notifyUserAboutLocationPermissionStatus()
         observerLocation()
     }
@@ -52,7 +55,8 @@ class MapFragment : Fragment() {
         _binding = null
     }
 
-    private fun addListenerToMapView() {
+    private fun initListeners() {
+        // Map view
         (childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment)
             .getMapAsync { googleMap ->
                 mMap = googleMap
@@ -60,42 +64,38 @@ class MapFragment : Fragment() {
                 mMap?.moveCamera(CameraUpdateFactory.newLatLng(telAviv))
                 mMap?.animateCamera(CameraUpdateFactory.zoomTo(MAP_VIEW_ZOOM_LEVEL))
             }
-    }
 
-    private fun initLocationTrackingSwitchListener() {
+        // On switch click listener
         binding.mapLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (!requireContext().isLocationPermissionGranted()) {
-                requestLocationPermission()
-                binding.mapLocationSwitch.isChecked = false
-                return@setOnCheckedChangeListener
-            }
-
-            if (isChecked) {
-                startTrackLocation()
-            } else {
-                stopTrackLocation()
-            }
+            startTrackingLocation(isChecked)
         }
     }
 
-
-    // If the user has restricted location permission several times, he must open the
-    // settings to allow this.
-    private fun requestLocationPermission() {
+    private fun startTrackingLocation(isTrack: Boolean) {
         if (!requireContext().isLocationPermissionGranted()) {
-            locationPermissionLauncher.launch(
-                arrayOf(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
+            locationPermissionLauncher.launch(REQUIRED_PERMISSIONS)
+            binding.mapLocationSwitch.isChecked = false
+            return
+        }
+
+        Intent(requireActivity().applicationContext, LocationService::class.java).apply {
+            action = if (isTrack) LocationService.ACTION_START else LocationService.ACTION_STOP
+            requireActivity().startService(this)
         }
     }
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) {
-        notifyUserAboutLocationPermissionStatus()
+    ) { permissionsResult ->
+        val allPermissionGranted = REQUIRED_PERMISSIONS.all {
+            permissionsResult[it] == true
+        }
+
+        if (allPermissionGranted) {
+            startTrackingLocation(true)
+            binding.mapLocationSwitch.isChecked = true
+            notifyUserAboutLocationPermissionStatus()
+        }
     }
 
     private fun notifyUserAboutLocationPermissionStatus() {
@@ -105,20 +105,6 @@ class MapFragment : Fragment() {
             } else {
                 View.GONE
             }
-    }
-
-    private fun startTrackLocation() {
-        Intent(requireActivity().applicationContext, LocationService::class.java).apply {
-            action = LocationService.ACTION_START
-            requireActivity().startService(this)
-        }
-    }
-
-    private fun stopTrackLocation() {
-        Intent(requireActivity().applicationContext, LocationService::class.java).apply {
-            action = LocationService.ACTION_STOP
-            requireActivity().startService(this)
-        }
     }
 
     private fun observerLocation() {
