@@ -7,17 +7,18 @@ import com.supercom.paulmaltsev.core.bluetooth.BluetoothClient
 class BluetoothViewModel(application: Application) : AndroidViewModel(application) {
 
     private val bluetoothClient: BluetoothClient = BluetoothClient(application)
-    private var isScanningInProgress = false
+    private var _isScanningInProgress = false
+    val isScanningInProgress get() = _isScanningInProgress
     val scannedDevices = bluetoothClient.scannedDevices
 
     fun scanForBluetoothDevices(function: (Boolean) -> Unit) {
-        if (isScanningInProgress) {
+        if (_isScanningInProgress) {
             bluetoothClient.stopScanForDevices()
         } else {
             bluetoothClient.startScanForDevices()
         }
 
-        isScanningInProgress = !isScanningInProgress
-        function(isScanningInProgress)
+        _isScanningInProgress = !_isScanningInProgress
+        function(_isScanningInProgress)
     }
 }

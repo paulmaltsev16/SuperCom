@@ -42,6 +42,11 @@ class BluetoothFragment : Fragment() {
         observerScannedDevices()
     }
 
+    override fun onResume() {
+        super.onResume()
+        showProgressBar(viewModel.isScanningInProgress)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

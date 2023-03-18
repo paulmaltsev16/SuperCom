@@ -36,8 +36,10 @@ class BluetoothDeviceAdapter(
     override fun getItemCount(): Int = filteredList.size
 
     fun updateList(it: ArrayList<BluetoothDeviceItem>) {
-        scannedDeviceList = it
-        filteredList = it
+        scannedDeviceList.clear()
+        filteredList.clear()
+        scannedDeviceList.addAll(it)
+        filteredList.addAll(it)
         notifyDataSetChanged()
     }
 
