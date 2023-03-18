@@ -7,20 +7,27 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
 fun Context.isLocationPermissionGranted(): Boolean {
-    return ContextCompat.checkSelfPermission(
-        this,
-        android.Manifest.permission.ACCESS_COARSE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(
-        this,
-        android.Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
+    return this.isGranted(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            && this.isGranted(android.Manifest.permission.ACCESS_FINE_LOCATION)
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun Context.isNotificationPermissionGranted(): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        return true
+    }
+    return this.isGranted(android.Manifest.permission.POST_NOTIFICATIONS)
+}
+
+fun Context.isBluetoothPermissionGranted(): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+        return true
+    }
+    return this.isGranted(android.Manifest.permission.BLUETOOTH_SCAN)
+            && this.isGranted(android.Manifest.permission.BLUETOOTH_CONNECT)
+}
+
+private fun Context.isGranted(permission: String): Boolean {
     return ContextCompat.checkSelfPermission(
-        this,
-        android.Manifest.permission.POST_NOTIFICATIONS
+        this, permission
     ) == PackageManager.PERMISSION_GRANTED
 }
